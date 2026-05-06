@@ -126,6 +126,13 @@ All five tools live under `src/mcp/`. Below: schema, sample input,
 sample response. Run any of these via `navigator.modelContextTesting.executeTool(name, JSON.stringify(args))`
 or via the Inspector's **Execute Tool** form.
 
+> **Sample responses below are exact output from the running app.** The
+> seed transactions are pinned to a fixed reference moment (6 May 2026,
+> 3:42 PM SGT) so dates and times stay deterministic across runs. The
+> only values that change at runtime are the IDs auto-generated for new
+> transfers (`t_<base36-timestamp>`) and new recipients
+> (`rcp_<base36-timestamp>`) — those are flagged in their sections.
+
 ### `getAccounts`
 
 Lists the user's accounts with current balances. **Read-only** — no
@@ -177,6 +184,11 @@ Returns recent transactions across all accounts, newest first.
   }]
 }
 ```
+
+Default response (no `limit` arg) returns all 5 seed rows in the same
+format. After you make a transfer through the UI, that new row appears
+at the top with the **real** timestamp (`Date.now()` at the moment of
+the transfer), not the pinned reference moment.
 
 ### `findRecipient`
 
@@ -240,6 +252,10 @@ of their accounts. **Pops a confirm modal** — the user must click
 }
 ```
 
+The transaction ID (`t_lkj9d8` above) is auto-generated from
+`Date.now().toString(36)` — yours will differ. The dollar amount,
+account names, and recipient name are deterministic.
+
 **Sample response (if user clicks Cancel)**
 
 ```json
@@ -276,6 +292,9 @@ saving.
   }]
 }
 ```
+
+The recipient ID (`rcp_lkj9d8` above) is auto-generated from
+`Date.now().toString(36)` — yours will differ.
 
 ---
 

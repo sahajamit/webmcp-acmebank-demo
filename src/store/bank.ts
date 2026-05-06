@@ -38,6 +38,15 @@ export type BankState = {
 
 const STORAGE_KEY = 'acmebank.state.v1';
 
+// Pinned reference moment — 6 May 2026, 3:42 PM SGT. Aligned with the
+// state captured in docs/screenshot.png so the screenshot, README sample
+// responses, and the live app all show the same dates/times. Seed
+// timestamps are computed relative to this fixed moment, not to
+// Date.now(), so README claims stay accurate forever. New transfers made
+// through the UI still stamp with the real Date.now() — pinning only
+// applies to the original seed data.
+const REFERENCE_NOW = new Date('2026-05-06T15:42:00+08:00').getTime();
+
 const SEED: BankState = {
   accounts: [
     { id: 'acc_chk', nickname: 'Everyday Checking', type: 'checking', number: '4071', balance: 482_3500, currency: 'SGD' },
@@ -51,11 +60,11 @@ const SEED: BankState = {
     { id: 'rcp_powerco', name: 'SP Group (utilities)', bank: 'Standard Chartered', accountNumber: '7800' },
   ],
   transactions: [
-    { id: 't_1', ts: Date.now() - 1000 * 60 * 60 * 6,         fromAccountId: 'acc_chk', toRecipientId: 'rcp_powerco', amount:  187_4500, memo: 'Apr utilities',     status: 'completed', channel: 'ui' },
-    { id: 't_2', ts: Date.now() - 1000 * 60 * 60 * 24 * 1,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_meena',   amount:   42_0000, memo: 'Dinner split',      status: 'completed', channel: 'ui' },
-    { id: 't_3', ts: Date.now() - 1000 * 60 * 60 * 24 * 2,    fromAccountId: 'acc_sav', toAccountId: 'acc_chk',       amount:  500_0000, memo: 'Top up checking',   status: 'completed', channel: 'ui' },
-    { id: 't_4', ts: Date.now() - 1000 * 60 * 60 * 24 * 3,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_landlord',amount: 2_400_0000,memo: 'Rent — May',        status: 'completed', channel: 'ui' },
-    { id: 't_5', ts: Date.now() - 1000 * 60 * 60 * 24 * 5,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_arjun',   amount:   18_5000, memo: 'Cab share',         status: 'completed', channel: 'ui' },
+    { id: 't_1', ts: REFERENCE_NOW - 1000 * 60 * 60 * 6,         fromAccountId: 'acc_chk', toRecipientId: 'rcp_powerco', amount:  187_4500, memo: 'Apr utilities',     status: 'completed', channel: 'ui' },
+    { id: 't_2', ts: REFERENCE_NOW - 1000 * 60 * 60 * 24 * 1,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_meena',   amount:   42_0000, memo: 'Dinner split',      status: 'completed', channel: 'ui' },
+    { id: 't_3', ts: REFERENCE_NOW - 1000 * 60 * 60 * 24 * 2,    fromAccountId: 'acc_sav', toAccountId: 'acc_chk',       amount:  500_0000, memo: 'Top up checking',   status: 'completed', channel: 'ui' },
+    { id: 't_4', ts: REFERENCE_NOW - 1000 * 60 * 60 * 24 * 3,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_landlord',amount: 2_400_0000,memo: 'Rent — May',        status: 'completed', channel: 'ui' },
+    { id: 't_5', ts: REFERENCE_NOW - 1000 * 60 * 60 * 24 * 5,    fromAccountId: 'acc_chk', toRecipientId: 'rcp_arjun',   amount:   18_5000, memo: 'Cab share',         status: 'completed', channel: 'ui' },
   ],
 };
 
