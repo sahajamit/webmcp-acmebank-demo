@@ -1,0 +1,52 @@
+{
+  "name": "webmcp-acmebank-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "AcmeBank — a tiny banking SPA that exposes its actions as Web MCP tools, so an in-browser agent can call them like functions instead of clicking through the UI.",
+  "license": "MIT",
+  "author": {
+    "name": "Amit Rawat",
+    "url": "https://github.com/sahajamit"
+  },
+  "homepage": "https://github.com/sahajamit/webmcp-acmebank-demo#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sahajamit/webmcp-acmebank-demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sahajamit/webmcp-acmebank-demo/issues"
+  },
+  "keywords": [
+    "webmcp",
+    "web-mcp",
+    "model-context-protocol",
+    "mcp",
+    "navigator-modelcontext",
+    "agent",
+    "browser-agent",
+    "react",
+    "vite",
+    "example",
+    "demo"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mcp-b/webmcp-polyfill": "^2.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@mcp-b/webmcp-types": "^2.2.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
