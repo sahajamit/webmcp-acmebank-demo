@@ -69,12 +69,13 @@ This is the path that gives you the screenshot above.
    and paste a free [Google AI Studio](https://aistudio.google.com/) key.
    This unlocks the natural-language *"Send $50 to Meena for dinner"*
    mode. Manual JSON-args mode works without a key.
-5. Run the app:
+5. Build and run the app (commands explained in the *Available scripts*
+   section below):
    ```bash
    git clone https://github.com/sahajamit/webmcp-acmebank-demo.git
    cd webmcp-acmebank-demo
-   npm install
-   npm run dev          # → http://localhost:5173
+   npm install          # install dependencies (one-time, ~10 sec)
+   npm run dev          # start the dev server → http://localhost:5173
    ```
 6. Open <http://localhost:5173> in Canary. The sidebar pill should say
    *"Web MCP active"*.
@@ -94,8 +95,8 @@ straight from DevTools console:
 ```bash
 git clone https://github.com/sahajamit/webmcp-acmebank-demo.git
 cd webmcp-acmebank-demo
-npm install
-npm run dev
+npm install          # install dependencies (one-time, ~10 sec)
+npm run dev          # start the dev server → http://localhost:5173
 ```
 
 Open <http://localhost:5173> in your normal browser → DevTools → Console:
@@ -117,6 +118,47 @@ console.log(JSON.parse(result));
 
 The polyfill is non-destructive: when it later runs in Chrome Canary
 with the flag, it detects the native impl and steps aside.
+
+---
+
+## Available scripts
+
+The app is a standard Vite + React + TypeScript project. Three npm
+scripts cover everything you need.
+
+**Prerequisites:** Node.js 18+ and npm 9+ (Vite 5's minimum).
+Check with `node --version` and `npm --version`.
+
+```bash
+# 1. One-time setup — install dependencies into node_modules/
+npm install
+
+# 2. Development — Vite dev server with hot module reload
+npm run dev
+# → http://localhost:5173 · auto-reloads on every save · best for the demo
+
+# 3. Production build — TypeScript compile + Vite bundle to dist/
+npm run build
+# → emits dist/index.html + dist/assets/*.{js,css} (~70 KB gzipped)
+# → use this if you want to host the demo on Vercel / Netlify / GitHub Pages
+
+# 4. Preview the production build locally
+npm run preview
+# → http://localhost:4173 · serves dist/ exactly as a static host would
+```
+
+**What `npm run build` actually does.** It runs `tsc -b && vite build`,
+so it (a) typechecks every `.ts/.tsx` file (the build fails on type
+errors), then (b) bundles + minifies + tree-shakes via Vite. If you're
+hacking on the source and want to confirm types still pass without
+producing a bundle, run `npx tsc --noEmit`.
+
+**Where the polyfill is wired.** `src/main.tsx` calls
+`initializeWebMCPPolyfill({ installTestingShim: true })` before React
+mounts, then `registerGlobalTools()` registers the three read-only
+tools. Page-scoped tools (`transferFunds`, `addRecipient`) are
+registered by their respective page components via the `useTool` hook
+in `src/mcp/useTool.ts`.
 
 ---
 
