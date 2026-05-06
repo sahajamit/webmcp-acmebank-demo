@@ -1,5 +1,9 @@
 # WebMCP · AcmeBank Demo
 
+> 📺 **Companion code for the YouTube video — [Web MCP just rewrote your QA job description (here's what to do about it)](https://www.youtube.com/watch?v=oHoE2RE_G-c)** on *The Agentic Engineer*.
+> Watch first if you want the full theory + walkthrough; clone this repo
+> if you want to play with the example yourself.
+
 A tiny **fake banking app** that exposes its actions as **Web MCP tools** —
 so an in-browser AI agent can call `getAccounts`, `findRecipient`, or
 `transferFunds` like functions, with **no DOM scraping, no screenshots, no
@@ -532,7 +536,12 @@ on agentic AI) walking through the WebMCP paradigm end-to-end —
 problem, spec, demo, and what changes if it ships to stable Chrome.
 
 The walkthrough on this exact code lives at:
-**[YouTube link to be added once published]**
+
+**▶︎ [Web MCP just rewrote your QA job description (here's what to do about it)](https://www.youtube.com/watch?v=oHoE2RE_G-c)**
+
+The video's framing leans into the same testing-angle section above
+— if you came here from search and the QA framing landed, the
+walkthrough is worth the watch.
 
 ---
 
