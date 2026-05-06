@@ -379,6 +379,85 @@ matters:
 
 ---
 
+## Same demo, seen from a testing angle
+
+The framing most people lead with is *"AI agents can now call your
+site's tools."* But there's a second audience this matters for that
+the AcmeBank demo makes legible: **anyone who writes UI tests or
+data-assertion automation against a web app.**
+
+Today, to assert *"the user's checking balance is $482.35"* in a
+browser test, you go through the DOM:
+
+```ts
+// Playwright-style — coupled to markup, fragile
+const balance = await page
+  .locator('.card.checking .balance')
+  .textContent();
+expect(balance).toBe('$482.35');
+
+// And the moment a row nests differently, you scrape harder:
+const balance2 = await page.evaluate(() => {
+  const cards = document.querySelectorAll('.card');
+  for (const c of cards) {
+    if (c.querySelector('.label')?.textContent === 'checking') {
+      return c.querySelector('.balance')?.textContent;
+    }
+  }
+});
+```
+
+Three things break this kind of assertion: someone renames `.card`
+to `.account-tile`, someone tweaks the markup of `.balance`, someone
+localizes the `"checking"` label to `"Checking"`. None of these are
+bugs in the application — they're cosmetic UI churn. But your test
+treats them as failures, because a DOM-shaped contract conflates
+*"the value the app believes is the balance"* with *"the way the
+balance is currently rendered."*
+
+With WebMCP, the same assertion goes around the DOM entirely:
+
+```ts
+// One call, structured result, survives any UI refactor
+const result = await page.evaluate(async () => {
+  const raw = await navigator.modelContextTesting.executeTool(
+    'getAccounts', '{}'
+  );
+  return JSON.parse(raw);
+});
+
+expect(result.content[0].text).toContain('Everyday Checking');
+expect(result.content[0].text).toContain('$482.35');
+```
+
+The page is now exposing a **stable, contract-shaped surface for the
+same data that's painted on screen.** If marketing reskins the
+account card from grey to coral, the test doesn't care. If
+engineering rewrites the dashboard in Solid instead of React, the
+test still passes. You're asserting against the *application's
+notion of the user's accounts* — which is what you wanted in the
+first place; the DOM was just the only handle you had.
+
+The same shift applies to the other tools:
+
+| What you want to assert | DOM-locator way | WebMCP way |
+|---|---|---|
+| User has 5 recent transactions | Loop and count `.list-row` elements, ignore the header row, parse text | `executeTool('getRecentTransactions', '{}')` → 5 lines in `.text` |
+| User can find recipient "Meena" | Type into search field, wait for dropdown, locate option | `executeTool('findRecipient', '{"query":"meena"}')` |
+| Net worth (excl. credit) is $2,622.35 | Sum up DOM-rendered numbers, fight currency formatting | Already in `getAccounts` response as `Net (excl. credit)` |
+
+For test-suite assertions, **WebMCP is OpenAPI for the page** — a
+declared contract, not a guess.
+
+The catch: the site has to *actually expose* the data through a
+WebMCP tool. AcmeBank does, deliberately. Most production sites
+don't — yet. If you maintain a site, this is the second-best reason
+to add WebMCP support after agentic-AI: your own QA team gets a
+saner test surface, and brittle-locator tickets stop landing in
+sprint planning.
+
+---
+
 ## Resetting + persistence
 
 State is stored in `localStorage` under the key `acmebank.state.v1`.

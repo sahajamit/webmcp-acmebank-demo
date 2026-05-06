@@ -28,7 +28,12 @@
     "react",
     "vite",
     "example",
-    "demo"
+    "demo",
+    "testing",
+    "qa",
+    "automation",
+    "playwright",
+    "ui-testing"
   ],
   "scripts": {
     "dev": "vite",
